@@ -4,12 +4,12 @@ import { StyleSheet, Text, View, Button } from 'react-native';
 import React, { useState } from 'react';
 
 // Componente Texto reutilizable
-const Texto = () => {
+const Texto = ({style}) => {
   const [contenido, setContenido] = useState("Hola Mundo");
   const actualizaTexto = () => setContenido('Estado Modificado');
 
   return (
-    <Text onPress={actualizaTexto} >
+    <Text style={[styles.Text,style]} onPress={actualizaTexto} >
       {contenido}
     </Text>
   );
@@ -25,10 +25,11 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Texto></Texto> 
-      <Texto></Texto> 
-      <Texto></Texto> 
-      <Button onPress={cambiarMensaje} title={mensaje} />
+
+      <Texto style={styles.azul}></Texto> 
+      <Texto style={styles.verde}></Texto> 
+      <Texto style={styles.negro}></Texto> 
+      {/* <Button onPress={cambiarMensaje} title={mensaje} /> */}
       <StatusBar style="auto" />
     </View>
   );
@@ -39,7 +40,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
+    alignItems: 'strech',
     justifyContent: 'center',
+    // flexDirection:'row'
   },
+  Text:{
+    color:'pink',
+    fontSize: 27,
+    
+  },
+  azul:{backgroundColor:'blue'},
+  verde:{backgroundColor:'green'},
+  negro:{backgroundColor: 'black'}
 });
