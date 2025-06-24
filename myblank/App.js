@@ -1,180 +1,216 @@
-// ZONA1: Importaciones
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, Alert, ScrollView, TouchableOpacity, TouchableHighlight, TouchableWithoutFeedback, Pressable, Switch } from 'react-native';
+/* Zona 1: Lugar de las importaciones */  
 import { StatusBar } from 'expo-status-bar';
-import { Button as PaperButton, Provider as PaperProvider } from 'react-native-paper';
-import { Button as ElementsButton } from 'react-native-elements';
+import {StyleSheet, TextInput, Text,View,Button,Alert,ScrollView,TouchableOpacity,TouchableHighlight,TouchableNativeFeedback,Pressable,Switch,TouchableWithoutFeedback} from 'react-native';
+import React, { useState } from 'react';
+import { Button as ButtonPaper, Provider as ProveedorPaper } from 'react-native-paper'; 
+import { Button as ButtonElements } from 'react-native-elements';
 
-// Componente Texto 
-const Texto = ({ style, isDarkMode }) => {
-  const [contenido, setContenido] = useState("Hola Mundo");
-  const actualizaTexto = () => setContenido('Estado Modificado');
-
-  return (
-    <Text style={[styles.Text, style, { color: isDarkMode ? '#fff' : 'pink' }]} onPress={actualizaTexto}>
-      {contenido}
-    </Text>
-  );
-};
-
-// ZONA2: MAIN
+/* Zona 2: Main */
 export default function App() {
-  // Estado para controlar si está activado el modo oscuro
-  const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Función que alterna entre modo claro y oscuro
-  const toggleSwitch = () => setIsDarkMode(previous => !previous);
+  const [defaultText, onChangeDefault] = useState('');
+  const [emailText, setEmailText] = useState('');
+  const [numberPadText, setNumberPadText] = useState('');
+  const [decimalPadText, setDecimalPadText] = useState('');
+  const [numericText, setNumericText] = useState('');
+  const [phoneText, setPhoneText] = useState('');
+  const [urlText, setUrlText] = useState('');
+  const [visiblePassword, setVisiblePassword] = useState('');
+
+  const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isValidPhone = (phone) => /^[0-9]{7,15}$/.test(phone);
+  const isValidUrl = (url) => /^(https?:\/\/)?([\w.-]+)\.([a-z]{2,6})(\/[\w.-])\/?$/.test(url);
+  const isNumeric = (value) => /^[0-9]+$/.test(value);
+  const isDecimal = (value) => /^[0-9]*\.?[0-9]+$/.test(value);
+
+
+  const AlertaBasica = () => {
+    window.alert('Hola, soy una alerta basica');
+  };
+
+  const AlertaConfirmacion = () => {
+    const confirmacion = window.confirm('¿Gus es gustambo?');
+    if (confirmacion) {
+      window.alert('Exactamente');
+    } else {
+      window.alert('Como que no?');
+    }
+  };
+
+  const AlertaTexto = () => {
+    const confirmacion = window.prompt('¿Erick está aqui?', 'ñero');
+    if (confirmacion) {
+      window.alert(`Exactamente, ${confirmacion}`);
+    } else {
+      window.alert('Respondeeeeeee');
+    }
+  };
+
+  const AlertaConfrimacion = () => {
+    const confirmacion = window.prompt('Que edad tienes?');
+    const numero = parseInt(confirmacion);
+    if (numero >= 1 && numero <= 70) {
+      window.alert(`Tu edad es: ${numero}`);
+    } else {
+      window.alert('Edad incorrectaaaaaaaaa');
+    }
+  };
+
+  const AlertaTimpo = () => {
+    setTimeout(() => {
+      window.alert('Hola, han pasado 5 segundos');
+    }, 5000);
+  };
+
+  const alertaRedireccion = () => {
+    if (window.confirm('¿Quieres ir a Google?')) {
+      window.location.href = 'https://www.google.com';
+    }
+  };
 
   return (
-    <PaperProvider>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* Se ajusta el fondo según el modo (oscuro o claro) */}
-        <View style={[styles.container, { backgroundColor: isDarkMode ? '#111' : '#fff' }]}>
+    
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.label}>default: </Text>
+        <TextInput
+          style={styles.input}
+          onChangeText={onChangeDefault}
+          value={defaultText}
+          placeholder="Escribe solo texto"
+          keyboardType='default'
+        />
 
-          {/* Switch para cambiar entre modo claro y oscuro */}
-          <View style={styles.section}>
-            <Text style={styles.title}>Modo {isDarkMode ? 'Oscuro' : 'Claro'}</Text>
-            <Switch value={isDarkMode} onValueChange={toggleSwitch} />
-          </View>
+        <Text style={styles.label}>number pad: </Text>
+        <TextInput
+          style={styles.input}
+          placeholder='Escribe solo numeros'
+          keyboardType='number-pad'
+          value={numberPadText}
+          onChangeText={(text) => {
+            if (isNumeric(text) || text === '') setNumberPadText(text);
+          }} 
+        />
 
-          {/* Textos de colores, su color también se adapta al modo actual */}
-          <Texto style={styles.azul} isDarkMode={isDarkMode} />
-          <Texto style={styles.verde} isDarkMode={isDarkMode} />
-          <Texto style={styles.negro} isDarkMode={isDarkMode} />
+        <Text style={styles.label}>decimal-pad: </Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Ingresa números decimales"
+          keyboardType="decimal-pad"
+          value={decimalPadText}
+          onChangeText={(text) => {
+            if (isDecimal(text) || text === '') setDecimalPadText(text);
+          }}
+        />
 
-          {/* 1. Button (nativo) */}
-          <View style={styles.section}>
-            <Text style={styles.title}>1. Button (nativo): simple, rápido y multiplataforma</Text>
-            <Button
-              title="Botón Nativo"
-              color="#007bff"
-              onPress={() => Alert.alert('Botón nativo presionado')}
-            />
-          </View>
+        <Text style={styles.label}>numeric: </Text>
+        <TextInput
+          style={styles.input}
+          placeholder='Escribe numeros'
+          keyboardType='numeric'
+          value={numericText}
+          onChangeText={(text) => {
+            if (isNumeric(text) || text === '') setNumericText(text);
+          }}
+        />
 
-          {/* 2. TouchableOpacity */}
-          <View style={styles.section}>
-            <Text style={styles.title}>2. TouchableOpacity: se vuelve transparente al presionar</Text>
-            <TouchableOpacity
-              style={[styles.btn, { backgroundColor: '#28a745' }]}
-              onPress={() => Alert.alert('TouchableOpacity')}>
-              <Text style={styles.btnText}>TouchableOpacity</Text>
-            </TouchableOpacity>
-          </View>
+        <Text style={styles.label}>Correo: </Text>
+        <TextInput
+          style={[styles.input, !isValidEmail(emailText) && emailText ? styles.errorInput : null]}
+          placeholder='Escribe un correo'
+          keyboardType='email-address'
+          value={emailText}
+          onChangeText={setEmailText}
+          autoCapitalize='none'
+        />
+        {!isValidEmail(emailText) && emailText !== '' && (
+          <Text style={styles.errorText}>Correo no válido</Text>
+        )}
 
-          {/* 3. TouchableHighlight */}
-          <View style={styles.section}>
-            <Text style={styles.title}>3. TouchableHighlight: cambia a otro color al presionar</Text>
-            <TouchableHighlight
-              style={[styles.btn, { backgroundColor: '#ffc107' }]}
-              underlayColor="#e0a800"
-              onPress={() => Alert.alert('TouchableHighlight')}>
-              <Text style={styles.btnText}>TouchableHighlight</Text>
-            </TouchableHighlight>
-          </View>
+        <Text style={styles.label}>phone-pad: </Text>
+        <TextInput
+          style={[styles.input, !isValidPhone(phoneText) && phoneText ? styles.errorInput : null]}
+          placeholder="Ingresa teléfono"
+          keyboardType="phone-pad"
+          value={phoneText}
+          onChangeText={setPhoneText}
+        />
+        {!isValidPhone(phoneText) && phoneText !== '' && (
+          <Text style={styles.errorText}>Teléfono inválido</Text>
+        )}
 
-          {/* 4. TouchableWithoutFeedback */}
-          <View style={styles.section}>
-            <Text style={styles.title}>4. TouchableWithoutFeedback: sin retroalimentación visual</Text>
-            <TouchableWithoutFeedback onPress={() => Alert.alert('TouchableWithoutFeedback')}>
-              <View style={[styles.btn, { backgroundColor: '#17a2b8' }]}>
-                <Text style={styles.btnText}>Sin feedback visual</Text>
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
+        <Text style={styles.label}>url:</Text>
+        <TextInput
+          style={[styles.input, !isValidUrl(urlText) && urlText ? styles.errorInput : null]}
+          placeholder="Ingresa URL"
+          keyboardType="url"
+          value={urlText}
+          onChangeText={setUrlText}
+          autoCapitalize="none"
+        />
+        {!isValidUrl(urlText) && urlText !== '' && (
+          <Text style={styles.errorText}>URL inválida</Text>
+        )}
 
-          {/* 5. Pressable */}
-          <View style={styles.section}>
-            <Text style={styles.title}>5. Pressable: control total sobre estados como presionado</Text>
-            <Pressable
-              style={({ pressed }) => [
-                styles.btn,
-                {
-                  backgroundColor: pressed ? '#6c757d' : '#343a40',
-                },
-              ]}
-              onPress={() => Alert.alert('Pressable presionado')}>
-              <Text style={styles.btnText}>Pressable</Text>
-            </Pressable>
-          </View>
+        <Text style={styles.label}>visible-password:</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Ingresa Contraseña"
+          keyboardType="visible-password"
+          value={visiblePassword}
+          onChangeText={setVisiblePassword}
+          secureTextEntry={false}
+          autoCapitalize="none"
+        />
+       </ScrollView>
 
-          {/* 6. Paper Button */}
-          <View style={styles.section}>
-            <Text style={styles.title}>6. Paper Button: diseño Material, moderno y elegante</Text>
-            <PaperButton
-              mode="contained"
-              buttonColor="#9c27b0"
-              textColor="#fff"
-              onPress={() => Alert.alert('Paper Button presionado')}
-              style={styles.paperButton}>
-              Paper Button
-            </PaperButton>
-          </View>
 
-          {/* 7. Elements Button */}
-          <View style={styles.section}>
-            <Text style={styles.title}>7. Elements Button: botón con iconos, estilos y temas</Text>
-            <ElementsButton
-              title="Elements Button"
-              onPress={() => Alert.alert('Elements Button presionado')}
-              buttonStyle={{
-                backgroundColor: '#ff5722',
-                borderRadius: 10,
-                padding: 10,
-              }}
-              titleStyle={{ fontWeight: 'bold', fontSize: 16 }}
-            />
-          </View>
-
-          <StatusBar style="auto" />
-        </View>
-      </ScrollView>
-    </PaperProvider>
+      
+      <Button title='Alerta basica' onPress={AlertaBasica}></Button>
+      <Button title='Alerta de confirmacion' onPress={AlertaConfirmacion}></Button>
+      <Button title='Alerta Erick' onPress={AlertaTexto}></Button>
+      <Button title='Alerta Edad' onPress={AlertaConfrimacion}></Button>
+      <Button title='Alerta con tiempo' onPress={AlertaTimpo}></Button>
+      <Button title='Alerta redireccion' onPress={alertaRedireccion}></Button>
+    </View>
   );
 }
 
-// ZONA3: Estilos
+/* Zona 3: Estilos */ 
 const styles = StyleSheet.create({
-  scrollContainer: {
-    paddingVertical: 30,
-  },
   container: {
     flex: 1,
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingBottom: 50,
+    padding: 20,
+    paddingBottom: 80,
+    backgroundColor: '#f5f5f5',
+    justifyContent: 'center',
+    alignItems: 'stretch',
+    gap: 10,
+    marginTop: 20,
+    marginBottom: 20,
+    borderRadius: 10,
+    shadowColor: '#000',
+
   },
-  Text: {
-    fontSize: 27,
-    marginVertical: 10,
+  label: {
+    fontWeight: 'bold',
+    marginTop: 12,
+    marginBottom: 4,
+    color: '#333',
   },
-  azul: { backgroundColor: 'blue' },
-  verde: { backgroundColor: 'green' },
-  negro: { backgroundColor: 'black' },
-  title: {
-    fontSize: 16,
-    marginVertical: 6,
-    textAlign: 'center',
-    color: '#000',
+  input: {
+    height: 40,
+    borderColor: '#aaa',
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    borderRadius: 5,
   },
-  section: {
-    marginVertical: 15,
-    alignItems: 'center',
-    width: '100%',
+  errorInput: {
+    borderColor: 'red',
   },
-  btn: {
-    padding: 12,
-    borderRadius: 8,
-    marginTop: 5,
-    width: 220,
-  },
-  btnText: {
-    color: '#fff',
-    fontSize: 16,
-    textAlign: 'center',
-  },
-  paperButton: {
-    marginTop: 5,
-    width: 220,
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginBottom: 4,
   },
 });
