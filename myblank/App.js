@@ -1,83 +1,83 @@
-import{
-  ScrollView, //hacer el deslizable
-  StatusBar, //barra de estado
-  StyleSheet, //estilos
-  Text, //texto
-} from 'react-native';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from "react-native";
+import { StyleSheet, View, Text, FlatList, SafeAreaView, ActivityIndicator } from "react-native";
+import React, { useEffect, useState } from "react";
 
 const App = () => {
- return (
-  <SafeAreaProvider>
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <ScrollView style={styles.scrollView} horizontal={true}>
-        <ScrollView>
-          <Text style={styles.text}>
-            Este es un ejemplo de una aplicación React Native con SafeAreaView y ScrollView.
-            Puedes agregar más contenido aquí para ver cómo funciona el desplazamiento.
-            Asegúrate de que el contenido sea lo suficientemente largo para activar el desplazamiento.
-            Puedes personalizar los estilos según tus necesidades.     
-            ste es un ejemplo de una aplicación React Native con SafeAreaView y ScrollView.
-            Puedes agregar más contenido aquí para ver cómo funciona el desplazamiento.
-            Asegúrate de que el contenido sea lo suficientemente largo para activar el desplazamiento.
-            Puedes personalizar los estilos según tus necesidades. 
-            ste es un ejemplo de una aplicación React Native con SafeAreaView y ScrollView.
-            Puedes agregar más contenido aquí para ver cómo funciona el desplazamiento.
-            Asegúrate de que el contenido sea lo suficientemente largo para activar el desplazamiento.
-            Puedes personalizar los estilos según tus necesidades. 
-            ste es un ejemplo de una aplicación React Native con SafeAreaView y ScrollView.
-            Puedes agregar más contenido aquí para ver cómo funciona el desplazamiento.
-            Asegúrate de que el contenido sea lo suficientemente largo para activar el desplazamiento.
-            Puedes personalizar los estilos según tus necesidades. 
-            ste es un ejemplo de una aplicación React Native con SafeAreaView y ScrollView.
-            Puedes agregar más contenido aquí para ver cómo funciona el desplazamiento.
-            Asegúrate de que el contenido sea lo suficientemente largo para activar el desplazamiento.
-            Puedes personalizar los estilos según tus necesidades. 
-            ste es un ejemplo de una aplicación React Native con SafeAreaView y ScrollView.
-            Puedes agregar más contenido aquí para ver cómo funciona el desplazamiento.
-            Asegúrate de que el contenido sea lo suficientemente largo para activar el desplazamiento.
-            Puedes personalizar los estilos según tus necesidades.  
-            ste es un ejemplo de una aplicación React Native con SafeAreaView y ScrollView.
-            Puedes agregar más contenido aquí para ver cómo funciona el desplazamiento.
-            Asegúrate de que el contenido sea lo suficientemente largo para activar el desplazamiento.
-            Puedes personalizar los estilos según tus necesidades. 
-            ste es un ejemplo de una aplicación React Native con SafeAreaView y ScrollView.
-            Puedes agregar más contenido aquí para ver cómo funciona el desplazamiento.
-            Asegúrate de que el contenido sea lo suficientemente largo para activar el desplazamiento.
-            Puedes personalizar los estilos según tus necesidades. 
-            ste es un ejemplo de una aplicación React Native con SafeAreaView y ScrollView.
-            Puedes agregar más contenido aquí para ver cómo funciona el desplazamiento.
-            Asegúrate de que el contenido sea lo suficientemente largo para activar el desplazamiento.
-            Puedes personalizar los estilos según tus necesidades. 
-            ste es un ejemplo de una aplicación React Native con SafeAreaView y ScrollView.
-            Puedes agregar más contenido aquí para ver cómo funciona el desplazamiento.
-            Asegúrate de que el contenido sea lo suficientemente largo para activar el desplazamiento.
-            Puedes personalizar los estilos según tus necesidades. 
-          </Text>
-        </ScrollView>
-      </ScrollView>
-      </SafeAreaView>
+  const [loading, setLoading] = useState(true);
+  const [users, setUsers] = useState([]);
 
-  </SafeAreaProvider>
+  useEffect(() => {
+    setTimeout(() => {
+      fetch('https://jsonplaceholder.typicode.com/users')
+        .then(response => response.json())
+        .then(data => {
+          setUsers(data);
+          setLoading(false);
+        })
+        .catch(error => {
+          console.error('Error al cargar usuarios:', error);
+          setLoading(false);
+        });
+    }, 2000); // Simula un retraso de 2 segundos
+  }, []);
+
+  const renderItem = ({ item }) => (
+    <View style={styles.card}>
+      <Text style={styles.name}>{item.name}</Text>
+      <Text style={styles.text}>{item.email}</Text>
+      <Text style={styles.text}>{item.address.city}</Text>
+      <Text style={styles.text}>{item.company.name}</Text>
+    </View>
   );
-}
 
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar />
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#0000ff" />
+          <Text style={styles.loadingText}>Cargando...</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={users}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={renderItem}
+        />
+      )}
+    </SafeAreaView>
+  );
+};
 
-
- //Definimos los estilos con StyleSheet
 const styles = StyleSheet.create({
   container: {
-    flex: 1,                             // Ocupa todo el alto disponible de la pantalla
-    paddingTop: StatusBar.currentHeight // Evita que el contenido se solape con la barra de estado
+    flex: 1,
+    paddingTop: 40,
+    paddingHorizontal: 10,
   },
-  scrollView: {
-    backgroundColor: 'green',            // Fondo rosa para visualizar el área del ScrollView
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#555',
+  },
+  card: {
+    backgroundColor: '#f2f2f2',
+    padding: 15,
+    marginVertical: 8,
+    borderRadius: 10,
+  },
+  name: {
+    fontWeight: 'bold',
+    fontSize: 18,
   },
   text: {
-    fontSize: 42,                        // Texto grande
-    padding: 12,                         // Espaciado interno
+    fontSize: 14,
   },
 });
 
-// Exportamos el componente para que pueda ser usado por la app
 export default App;
